@@ -1,11 +1,10 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using CommandLine.Tests.Fakes;
 using Xunit;
 using FluentAssertions;
+using CommandLine.Tests.Fakes;
+using System.Threading.Tasks;
 
 namespace CommandLine.Tests.Unit
 {
@@ -17,6 +16,16 @@ namespace CommandLine.Tests.Unit
             var expected = string.Empty;
             Parser.Default.ParseArguments<Simple_Options>(new[] { "--stringvalue", "value" })
                 .WithParsed(opts => expected = opts.StringValue);
+
+            "value".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public static async Task Invoke_parsed_lambda_when_parsedAsync()
+        {
+            var expected = string.Empty;
+            await Parser.Default.ParseArguments<Simple_Options>(new[] { "--stringvalue", "value" })
+                .WithParsedAsync(opts => Task.Run(() => expected = opts.StringValue));
 
             "value".Should().BeEquivalentTo(expected);
         }
@@ -35,11 +44,35 @@ namespace CommandLine.Tests.Unit
         }
 
         [Fact]
+        public static async Task Invoke_parsed_lambda_when_parsed_for_verbsAsync()
+        {
+            var expected = string.Empty;
+            var parsedArguments = Parser.Default.ParseArguments<Add_Verb, Commit_Verb, Clone_Verb>(
+                new[] { "clone", "https://value.org/user/file.git" });
+
+            await parsedArguments.WithParsedAsync<Add_Verb>(opts => Task.Run(() => expected = "wrong1"));
+            await parsedArguments.WithParsedAsync<Commit_Verb>(opts => Task.Run(() => expected = "wrong2"));
+            await parsedArguments.WithParsedAsync<Clone_Verb>(opts => Task.Run(() => expected = opts.Urls.First()));
+
+            "https://value.org/user/file.git".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public static void Invoke_not_parsed_lambda_when_not_parsed()
         {
             var expected = "a default";
             Parser.Default.ParseArguments<Simple_Options>(new[] { "-i", "aaa" })
                 .WithNotParsed(_ => expected = "changed");
+
+            "changed".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public static async Task Invoke_not_parsed_lambda_when_not_parsedAsync()
+        {
+            var expected = "a default";
+            await Parser.Default.ParseArguments<Simple_Options>(new[] { "-i", "aaa" })
+                .WithNotParsedAsync(_ => Task.Run(() => expected = "changed"));
 
             "changed".Should().BeEquivalentTo(expected);
         }
@@ -58,6 +91,20 @@ namespace CommandLine.Tests.Unit
         }
 
         [Fact]
+        public static async Task Invoke_not_parsed_lambda_when_parsed_for_verbsAsync()
+        {
+            var expected = "a default";
+            var parsedArguments = Parser.Default.ParseArguments<Add_Verb, Commit_Verb, Clone_Verb>(new[] { "undefined", "-xyz" });
+
+            await parsedArguments.WithParsedAsync<Add_Verb>(opts => Task.Run(() => expected = "wrong1"));
+            await parsedArguments.WithParsedAsync<Commit_Verb>(opts => Task.Run(() => expected = "wrong2"));
+            await parsedArguments.WithParsedAsync<Clone_Verb>(opts => Task.Run(() => expected = "wrong3"));
+            await parsedArguments.WithNotParsedAsync(_ => Task.Run(() => expected = "changed"));
+
+            "changed".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public static void Invoke_proper_lambda_when_parsed()
         {
             var expected = string.Empty;
@@ -69,12 +116,36 @@ namespace CommandLine.Tests.Unit
         }
 
         [Fact]
+        public static async Task Invoke_proper_lambda_when_parsedAsync()
+        {
+            var expected = string.Empty;
+            var parsedArguments = Parser.Default.ParseArguments<Simple_Options>(new[] { "--stringvalue", "value" });
+
+            await parsedArguments.WithParsedAsync(opts => Task.Run(() => expected = opts.StringValue));
+            await parsedArguments.WithNotParsedAsync(_ => Task.Run(() => expected = "changed"));
+
+            "value".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public static void Invoke_proper_lambda_when_not_parsed()
         {
             var expected = "a default";
             Parser.Default.ParseArguments<Simple_Options>(new[] { "-i", "aaa" })
                 .WithParsed(opts => expected = opts.StringValue)
                 .WithNotParsed(_ => expected = "changed");
+
+            "changed".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public static async Task Invoke_proper_lambda_when_not_parsedAsync()
+        {
+            var expected = "a default";
+            var parsedArguments = Parser.Default.ParseArguments<Simple_Options>(new[] { "-i", "aaa" });
+
+            await parsedArguments.WithParsedAsync(opts => Task.Run(() => expected = opts.StringValue));
+            await parsedArguments.WithNotParsedAsync(_ => Task.Run(() => expected = "changed"));
 
             "changed".Should().BeEquivalentTo(expected);
         }
@@ -135,6 +206,21 @@ namespace CommandLine.Tests.Unit
                 .WithParsed<Commit_Verb>(opts => expected = "wrong2")
                 .WithParsed<Clone_Verb>(opts => expected = "wrong3")
                 .WithParsed<Base_Class_For_Verb>(opts => expected = opts.FileName);
+
+            "dummy.bin".Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public static async Task Invoke_parsed_lambda_when_parsed_for_base_verbsAsync()
+        {
+            var expected = string.Empty;
+            var parsedArguments = Parser.Default.ParseArguments<Add_Verb, Commit_Verb, Clone_Verb, Derived_Verb>(
+                new[] { "derivedadd", "dummy.bin" });
+
+            await parsedArguments.WithParsedAsync<Add_Verb>(opts => Task.Run(() => expected = "wrong1"));
+            await parsedArguments.WithParsedAsync<Commit_Verb>(opts => Task.Run(() => expected = "wrong2"));
+            await parsedArguments.WithParsedAsync<Clone_Verb>(opts => Task.Run(() => expected = "wrong3"));
+            await parsedArguments.WithParsedAsync<Base_Class_For_Verb>(opts => Task.Run(() => expected = opts.FileName));
 
             "dummy.bin".Should().BeEquivalentTo(expected);
         }

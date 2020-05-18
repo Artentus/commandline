@@ -1,8 +1,65 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+CommandLineParser project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.8.0] - 2020-5-1
+## [2.8.0-preview4] - 2020-4-30
+## [2.8.0-preview1] - 2020-3-14
+
+### Added
+- Added support for async programming for `WithParsed and WithNotParsed` by [@joseangelmt, PR# 390 ](https://github.com/commandlineparser/commandline/pull/390).
+- Publish a new symbol packages with source link support for c# and F# (.snupkg) to improved package debugging experience by [@moh-hassan, PR#554](https://github.com/commandlineparser/commandline/pull/554)
+- Add default verb support by [@Artentus, PR# 556](https://github.com/commandlineparser/commandline/pull/556).
+- Add more details for localized attribute properties  by [@EdmondShtogu, PR# 558](https://github.com/commandlineparser/commandline/pull/558)
+- Support Default in Group Options and raise error if both SetName and Group are applied on option by [@hadzhiyski, PR# 575](https://github.com/commandlineparser/commandline/pull/575).
+- Support mutable types without empty constructor that only does explicit implementation of interfaces by [@pergardebrink, PR#590](https://github.com/commandlineparser/commandline/pull/590).
+
+
+### Changed
+- Tests cleanup by [@gsscoder, PR# 560](https://github.com/commandlineparser/commandline/pull/560).
+- Upgraded parts of CSharpx from Version 1.6.2-alpha by [@gsscoder, PR# 561](https://github.com/commandlineparser/commandline/pull/561).
+- Upgraded RailwaySharp from Version 1.1.0 by [@gsscoder, PR# 562](https://github.com/commandlineparser/commandline/pull/562).
+- SkipDefault is being respected by [Usage] Examples by [@kendfrey, PR# 565](https://github.com/commandlineparser/commandline/pull/565).
+- Remove useless testing code by [@gsscoder, PR# 568](https://github.com/commandlineparser/commandline/pull/568).
+- Remove constraint on T for ParseArguments with factory (required by issue #70) by [@pergardebrink](https://github.com/commandlineparser/commandline/pull/590).
+- Update nuget api key by [@ericnewton76](https://github.com/commandlineparser/commandline/commit/2218294550e94bcbc2b76783970541385eaf9c07)
+
+### Fixed
+- Fix #579 Unable to parse TimeSpan given from the FormatCommandLine by [@gsscoder, PR# 580](https://github.com/commandlineparser/commandline/pull/580).
+- Fix issue #339 for using custom struct having a constructor with string parameter by [moh-hassan, PR# 588](https://github.com/commandlineparser/commandline/pull/588).
+- Fix issue #409 to avoid IOException break in Debug mode in WPF app by [moh-hassan, PR# 589 ](https://github.com/commandlineparser/commandline/pull/589).
+
+
+## [2.7.82] - 2020-1-1
+## [2.7.0] - 2020-1-1
+### Added
+- Add option groups feature by [@hadzhiyski](https://github.com/commandlineparser/commandline/pull/552) - When one or more options has group set, at least one of these properties should have set value (they behave as required).
+- Add a new overload method for AutoBuild to enable HelpText customization by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/557).
+- Improve spacing in HelpText by [@asherber](https://github.com/commandlineparser/commandline/pull/494) by adding a new option in the HelpText.
+- Add a new option "SkipDefault" in UnParserSettings by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/550) to add the ability of skipping the options with a default value and fix [#541](https://github.com/commandlineparser/commandline/issues/541).
+- Generate a new symbolic nuget Package by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/554) to Improve the debugging of Applications with the  NuGet package using [symbols experience](https://github.com/NuGet/Home/wiki/NuGet-Package-Debugging-&-Symbols-Improvements).
+- Add Support to [SourceLink](https://github.com/dotnet/sourcelink/blob/master/docs/README.md) in the nuget package  [@moh-hassan](https://github.com/commandlineparser/commandline/pull/554).
+
+### Changed
+- Remove the Exception when both CompanyAttribute and CopyRightAttribute are null in the Excuting assembly and set the copyright text to a default value by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/557).
+- Change the default copyright to include current year instead of 1 by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/557).
+- Enabling c# 8 and Vs2019 image in Appveyor.
+
+### Fixed
+- Fix NullReferenceException when creating a default immutable instance by [@0xced](https://github.com/commandlineparser/commandline/pull/495).
+- Fix issue [#496](https://github.com/commandlineparser/commandline/issues/496) - Cryptic error message with immutable option class by[@moh-hassan](https://github.com/commandlineparser/commandline/pull/555).
+- Fix UnParserExtensions.FormatCommandLine by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/550) to resolve:
+  -  Fix Quote for Options of type DatTime [#502](https://github.com/commandlineparser/commandline/issues/502) and [#528](https://github.com/commandlineparser/commandline/issues/258).
+  - Fix Quote for options of type TimeSpan and DateTimeOffset.
+  - Fix Nullable type [#305](https://github.com/commandlineparser/commandline/issues/305)
+
+- Fix nuget Licence in nuget package by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/549) and fix issue  [#545](https://github.com/commandlineparser/commandline/issues/545).
+- Fix PackageIconUrl warning in nuget package by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/551).
+- Fix immutable nullException, Improve exception message when immutable type can't be created
+- Fix Custom help for verbs issue[#529](https://github.com/commandlineparser/commandline/issues/529) by [@moh-hassan](https://github.com/commandlineparser/commandline/pull/557).
+- Fix --help switch throwing exception in F# [#366](https://github.com/commandlineparser/commandline/issues/366)
+by [@WallaceKelly](https://github.com/commandlineparser/commandline/pull/493)
 
 ## [2.6.0] - 2019-07-31
 ### Added
@@ -48,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add support to  NetStandard2.0 by [@ViktorHofer](https://github.com/commandlineparser/commandline/pull/307) 
 - Add strong name signing  [@ViktorHofer](https://github.com/commandlineparser/commandline/pull/307) 
--  Added AutoHelp and AutoVersion properties to control adding of implicit 'help' and 'version' options/verbs by [@Athari](https://github.com/commandlineparser/commandline/pull/256). 
+-  Added AutoBuild and AutoVersion properties to control adding of implicit 'help' and 'version' options/verbs by [@Athari](https://github.com/commandlineparser/commandline/pull/256). 
 - Added simpler C# Quick Start example at readme.md by [@lythix](https://github.com/commandlineparser/commandline/pull/274).
 - Add validate feature in Set parameter, and throw exception, and show usage,Issue #283 by[@e673](https://github.com/commandlineparser/commandline/pull/286).
 
@@ -92,5 +149,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.0] - 2018-01-07 
 
-## [1.9.71.2] - 2013-02-27
-The starting bascode version
+## [1.9.71.2] - 2013-02-27: The starting bascode version

@@ -18,7 +18,20 @@ namespace CommandLine.Tests.Fakes
         [Value(0)]
         public string FileName { get; set; }
     }
+    [Verb("add", isDefault:true,HelpText = "Add file contents to the index.")]
+    public class Add_Verb_As_Default
+    {
+        [Option('p', "patch", SetName = "mode-p",
+            HelpText = "Interactively choose hunks of patch between the index and the work tree and add them to the index.")]
+        public bool Patch { get; set; }
 
+        [Option('f', "force", SetName = "mode-f",
+            HelpText = "Allow adding otherwise ignored files.")]
+        public bool Force { get; set; }
+
+        [Value(0)]
+        public string FileName { get; set; }
+    }
     [Verb("commit", HelpText = "Record changes to the repository.")]
     public class Commit_Verb
     {
@@ -84,5 +97,26 @@ namespace CommandLine.Tests.Fakes
 
         [Value(0)]
         public string PosValue { get; set; }
+    }
+
+    [Verb("default1", true)]
+    class Default_Verb_One
+    {
+        [Option('t', "test-one")]
+        public bool TestValueOne { get; set; }
+    }
+
+    [Verb("default2", true)]
+    class Default_Verb_Two
+    {
+        [Option('t', "test-two")]
+        public bool TestValueTwo { get; set; }
+    }
+
+    [Verb(null, true)]
+    class Default_Verb_With_Empty_Name
+    {
+        [Option('t', "test")]
+        public bool TestValue { get; set; }
     }
 }

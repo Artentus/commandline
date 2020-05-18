@@ -1,18 +1,19 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
+// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
+
+using Microsoft.FSharp.Core;
+using CommandLine.Core;
+using CommandLine.Infrastructure;
+using CommandLine.Tests.Fakes;
+
+using CSharpx;
+
+using FluentAssertions;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.FSharp.Core;
-using CommandLine.Core;
-using CommandLine.Infrastructure;
-
-using CSharpx;
-using CommandLine.Tests.Fakes;
-using FluentAssertions;
 using Xunit;
-using System.Reflection;
 
 namespace CommandLine.Tests.Unit.Core
 {
@@ -75,12 +76,10 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             result.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Theory]
-        [InlineData(new[] {"-123"}, -123L)]
+        [InlineData(new[] { "-123" }, -123L)]
         [InlineData(new[] { "-1" }, -1L)]
         [InlineData(new[] { "-9223372036854775807" }, -9223372036854775807)] // long.MaxValue * -1
         public void Parse_negative_long_value(string[] arguments, long expected)
@@ -93,8 +92,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Simple_Options>)result).Value.LongValue.Should().Be(expected);
-
-            // Teardown
         }
 
         [Theory]
@@ -113,8 +110,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Simple_Options_With_Double_Value>)result).Value.DoubleValue.Should().Be(expected);
-
-            // Teardown
         }
 
         [Theory]
@@ -134,8 +129,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Options_With_Sequence>)result).Value.IntSequence.Should().BeEquivalentTo(expected);
-            
-            // Teardown
         }
 
         [Theory]
@@ -153,14 +146,12 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Simple_Options>)result).Value.IntSequence.Should().BeEquivalentTo(expected);
-            
-            // Teardown
         }
 
         [Theory]
-        [InlineData(new[] {"-s", "just-one"}, new[] {"just-one"})]
-        [InlineData(new[] {"-sjust-one-samearg"}, new[] {"just-one-samearg"})]
-        [InlineData(new[] {"-s", "also-two", "are-ok" }, new[] { "also-two", "are-ok" })]
+        [InlineData(new[] { "-s", "just-one" }, new[] { "just-one" })]
+        [InlineData(new[] { "-sjust-one-samearg" }, new[] { "just-one-samearg" })]
+        [InlineData(new[] { "-s", "also-two", "are-ok" }, new[] { "also-two", "are-ok" })]
         [InlineData(new[] { "--string-seq", "one", "two", "three" }, new[] { "one", "two", "three" })]
         [InlineData(new[] { "--string-seq=one", "two", "three", "4" }, new[] { "one", "two", "three", "4" })]
         public void Parse_string_sequence_with_only_min_constraint(string[] arguments, string[] expected)
@@ -173,8 +164,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Options_With_Sequence_And_Only_Min_Constraint>)result).Value.StringSequence.Should().BeEquivalentTo(expected);
-
-            // Teardown
         }
 
         [Theory]
@@ -192,8 +181,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Options_With_Sequence_And_Only_Max_Constraint>)result).Value.StringSequence.Should().BeEquivalentTo(expected);
-
-            // Teardown
         }
 
         [Fact]
@@ -208,8 +195,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Sequence_And_Only_Min_Constraint>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -224,8 +209,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Sequence_And_Only_Min_Constraint_For_Value>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -240,8 +223,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Sequence_And_Only_Max_Constraint>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -256,8 +237,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Sequence_And_Only_Max_Constraint_For_Value>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Theory]
@@ -277,8 +256,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
-
-            // Teardown
         }
 
         [Theory]
@@ -298,8 +275,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
-
-            // Teardown
         }
 
         [Fact]
@@ -314,8 +289,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options_With_Enum>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -330,8 +303,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options_With_Enum>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -346,8 +317,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options_With_Enum>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -355,12 +324,12 @@ namespace CommandLine.Tests.Unit.Core
         {
             // Fixture setup
             var expectedResult = new Simple_Options_With_Values
-                {
-                    StringValue = string.Empty,
-                    LongValue = 10L,
-                    StringSequence = new[] { "a", "b", "c" },
-                    IntValue = 20
-                };
+            {
+                StringValue = string.Empty,
+                LongValue = 10L,
+                StringSequence = new[] { "a", "b", "c" },
+                IntValue = 20
+            };
 
             // Exercize system 
             var result = InvokeBuild<Simple_Options_With_Values>(
@@ -368,8 +337,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expectedResult.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Values>)result).Value);
-
-            // Teardown
         }
 
         [Theory]
@@ -388,8 +355,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Sequence_Without_Range_For_Value>)result).Value.LongSequence);
-
-            // Teardown
         }
 
         [Theory]
@@ -407,8 +372,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Sequence_Having_Separator_Set>)result).Value.LongSequence);
-
-            // Teardown
         }
 
         [Theory]
@@ -426,8 +389,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Sequence_Having_Separator_Set>)result).Value.StringSequence);
-
-            // Teardown
         }
 
         /// <summary>
@@ -438,12 +399,12 @@ namespace CommandLine.Tests.Unit.Core
         {
             // Fixture setup
             var expectedResult = new Simple_Options_With_Values
-                {
-                    StringValue = "str1",
-                    LongValue = 10L,
-                    StringSequence = new[] { "-a", "--bee", "-c" },
-                    IntValue = 20
-                };
+            {
+                StringValue = "str1",
+                LongValue = 10L,
+                StringSequence = new[] { "-a", "--bee", "-c" },
+                IntValue = 20
+            };
             var arguments = new[] { "--stringvalue", "str1", "--", "10", "-a", "--bee", "-c", "20" };
 
             // Exercize system 
@@ -462,8 +423,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expectedResult.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Values>)result).Value);
-
-            // Teardown
         }
 
         [Fact]
@@ -482,14 +441,14 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Two_Sets>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
-        public void Two_required_options_at_the_same_set_and_both_are_true() {
+        public void Two_required_options_at_the_same_set_and_both_are_true()
+        {
             // Fixture setup
-            var expectedResult = new Options_With_Required_Set_To_True_Within_Same_Set {
+            var expectedResult = new Options_With_Required_Set_To_True_Within_Same_Set
+            {
                 FtpUrl = "str1",
                 WebUrl = "str2"
             };
@@ -503,7 +462,8 @@ namespace CommandLine.Tests.Unit.Core
         }
 
         [Fact]
-        public void Two_required_options_at_the_same_set_and_none_are_true() {
+        public void Two_required_options_at_the_same_set_and_none_are_true()
+        {
             // Fixture setup
             var expectedResult = new[]
             {
@@ -516,8 +476,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Required_Set_To_True_Within_Same_Set>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -532,8 +490,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Required_Set_To_True>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -548,8 +504,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -564,8 +518,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -580,8 +532,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -596,13 +546,11 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Simple_Options>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Theory]
-        [InlineData(new[] {"--stringvalue", "this-value"}, "this-value")]
-        [InlineData(new[] {"--stringvalue=this-other"}, "this-other")]
+        [InlineData(new[] { "--stringvalue", "this-value" }, "this-value")]
+        [InlineData(new[] { "--stringvalue=this-other" }, "this-other")]
         public void Omitting_names_assumes_identifier_as_long_name(string[] arguments, string expected)
         {
             // Fixture setup in attributes
@@ -613,8 +561,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((Parsed<Simple_Options>)result).Value.StringValue.Should().BeEquivalentTo(expected);
-
-            // Teardown
         }
 
         [Fact]
@@ -629,8 +575,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Required_Set_To_True_For_Values>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Theory]
@@ -648,8 +592,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Simple_Options>)result).Value.StringValue);
-
-            // Teardown
         }
 
         [Fact]
@@ -664,8 +606,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Sequence_Having_Both_Min_And_Max_Equal>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Theory]
@@ -683,8 +623,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().Be(((Parsed<Options_With_Nullables>)result).Value.NullableInt);
-
-            // Teardown
         }
 
         [Theory]
@@ -702,8 +640,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().Be(((Parsed<Options_With_Nullables>)result).Value.NullableLong);
-
-            // Teardown
         }
 
 #if !SKIP_FSHARP
@@ -724,8 +660,6 @@ namespace CommandLine.Tests.Unit.Core
                 expectedValue.Should().BeEquivalentTo(((Parsed<Options_With_FSharpOption>)result).Value.FileName.Value);
             }
             expectedSome.Should().Be(FSharpOption<string>.get_IsSome(((Parsed<Options_With_FSharpOption>)result).Value.FileName));
-
-            // Teardown
         }
 
         [Theory]
@@ -745,8 +679,6 @@ namespace CommandLine.Tests.Unit.Core
                 expectedValue.Should().Be(((Parsed<Options_With_FSharpOption>)result).Value.Offset.Value);
             }
             expectedSome.Should().Be(FSharpOption<int>.get_IsSome(((Parsed<Options_With_FSharpOption>)result).Value.Offset));
-
-            // Teardown
         }
 #endif
 
@@ -785,7 +717,7 @@ namespace CommandLine.Tests.Unit.Core
         }
 
         [Theory]
-        [InlineData(new[] {"--weburl", "value.com", "--verbose"}, ParserResultType.Parsed, 0)]
+        [InlineData(new[] { "--weburl", "value.com", "--verbose" }, ParserResultType.Parsed, 0)]
         [InlineData(new[] { "--ftpurl", "value.org", "--interactive" }, ParserResultType.Parsed, 0)]
         [InlineData(new[] { "--weburl", "value.com", "--verbose", "--interactive" }, ParserResultType.Parsed, 0)]
         [InlineData(new[] { "--ftpurl=fvalue", "--weburl=wvalue" }, ParserResultType.NotParsed, 2)]
@@ -858,6 +790,20 @@ namespace CommandLine.Tests.Unit.Core
         [Theory]
         [InlineData(new[] { "--inputfile=file1.bin" }, "file1.bin")]
         [InlineData(new[] { "--inputfile", "file2.txt" }, "file2.txt")]
+        public void Can_define_options_on_explicit_interface_properties(string[] arguments, string expected) 
+            {
+            // Exercize system
+            var result = InvokeBuild<Options_With_Only_Explicit_Interface>(
+                arguments);
+
+            // Verify outcome
+            expected.Should().BeEquivalentTo(((IInterface_With_Two_Scalar_Options)((Parsed<Options_With_Only_Explicit_Interface>)result).Value).InputFile);
+        }
+
+
+        [Theory]
+        [InlineData(new[] { "--inputfile=file1.bin" }, "file1.bin")]
+        [InlineData(new[] { "--inputfile", "file2.txt" }, "file2.txt")]
         public void Can_define_options_on_interface_properties(string[] arguments, string expected)
         {
             // Exercize system
@@ -905,8 +851,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Required_Set_To_True_For_Values>)result).Value);
-
-            // Teardown
         }
 
         [Theory]
@@ -921,15 +865,13 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Scalar_Value_And_Adjacent_SequenceString>)result).Value);
-
-            // Teardown
         }
 
         [Fact]
         public void Parse_to_mutable()
         {
             // Fixture setup
-            var expectedResult = new Simple_Options { StringValue="strval0", IntSequence=new[] { 9, 7, 8 }, BoolValue = true,  LongValue = 9876543210L };
+            var expectedResult = new Simple_Options { StringValue = "strval0", IntSequence = new[] { 9, 7, 8 }, BoolValue = true, LongValue = 9876543210L };
 
             // Exercize system 
             var result = InvokeBuild<Simple_Options>(
@@ -937,17 +879,15 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expectedResult.Should().BeEquivalentTo(((Parsed<Simple_Options>)result).Value);
-
-            // Teardown
         }
 
         [Theory]
         [InlineData(new string[] { }, 2)]
-        [InlineData(new [] { "--str=val0" }, 1)]
-        [InlineData(new [] { "--long=9" }, 1)]
-        [InlineData(new [] { "--int=7" }, 2)]
-        [InlineData(new [] { "--str", "val1", "--int=3" }, 1)]
-        [InlineData(new [] { "--long", "9", "--int=11" }, 1)]
+        [InlineData(new[] { "--str=val0" }, 1)]
+        [InlineData(new[] { "--long=9" }, 1)]
+        [InlineData(new[] { "--int=7" }, 2)]
+        [InlineData(new[] { "--str", "val1", "--int=3" }, 1)]
+        [InlineData(new[] { "--long", "9", "--int=11" }, 1)]
         public void Breaking_required_constraint_generate_MissingRequiredOptionError(string[] arguments, int expected)
         {
             // Exercize system 
@@ -971,8 +911,23 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Immutable_Simple_Options>)result).Value);
+        }
 
-            // Teardown
+        [Theory]
+        [MemberData(nameof(ImmutableInstanceDataArgs))]
+        [Trait("Category", "Immutable")]
+        public void Parse_to_immutable_instance_with_Invalid_Ctor_Args(string[] arguments)
+        {
+            // Fixture setup in attributes
+
+            // Exercize system 
+            Action act = () => InvokeBuildImmutable<Immutable_Simple_Options_Invalid_Ctor_Args>(
+                arguments);
+
+            // Verify outcome
+            var expectedMsg =
+                "Type CommandLine.Tests.Fakes.Immutable_Simple_Options_Invalid_Ctor_Args appears to be Immutable with invalid constructor. Check that constructor arguments have the same name and order of their underlying Type.  Constructor Parameters can be ordered as: '(stringvalue, intsequence, boolvalue, longvalue)'";
+            act.Should().Throw<InvalidOperationException>().WithMessage(expectedMsg);
         }
 
         [Fact]
@@ -987,8 +942,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expectedResult.Should().BeEquivalentTo(((Parsed<Options_With_Uri_And_SimpleType>)result).Value);
-
-            // Teardown
         }
 
         [Fact]
@@ -1003,8 +956,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             ((NotParsed<Options_With_Property_Throwing_Exception>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
         }
 
         [Fact]
@@ -1043,8 +994,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Simple_Options>)result).Value.StringValue);
-
-            // Teardown
         }
 
         [Theory]
@@ -1060,8 +1009,6 @@ namespace CommandLine.Tests.Unit.Core
             result.Should().BeOfType<NotParsed<Simple_Options>>()
                 .Which.Errors.Should().ContainSingle()
                 .Which.Tag.Should().Be(errorType);
-
-            // Teardown
         }
 
         [Theory]
@@ -1078,8 +1025,6 @@ namespace CommandLine.Tests.Unit.Core
             // Verify outcome
             result.Should().BeOfType<Parsed<Options_With_Custom_Help_Option>>()
                 .Which.Value.Help.Should().Be(isHelp);
-
-            // Teardown
         }
 
         [Theory]
@@ -1095,8 +1040,6 @@ namespace CommandLine.Tests.Unit.Core
             result.Should().BeOfType<NotParsed<Simple_Options>>()
                 .Which.Errors.Should().ContainSingle()
                 .Which.Tag.Should().Be(errorType);
-
-            // Teardown
         }
 
         [Theory]
@@ -1113,8 +1056,6 @@ namespace CommandLine.Tests.Unit.Core
             // Verify outcome
             result.Should().BeOfType<Parsed<Options_With_Custom_Version_Option>>()
                 .Which.Value.MyVersion.Should().Be(isVersion);
-
-            // Teardown
         }
 
         [Theory]
@@ -1129,8 +1070,6 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expected.Should().BeEquivalentTo(((Parsed<Options_With_Guid>)result).Value);
-
-            // Teardown
         }
 
         [Fact]
@@ -1145,19 +1084,209 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             expectedResult.Should().BeEquivalentTo(((Parsed<Options_With_TimeSpan>)result).Value);
-
-            // Teardown
         }
 
+        #region Issue 579
+        [Fact]
+        public void Should_not_parse_quoted_TimeSpan()
+        {
+            // Exercize system 
+            var result = InvokeBuild<Options_With_TimeSpan>(new[] { "--duration=\"00:42:00\"" });
+
+            var outcome = result as NotParsed<Options_With_TimeSpan>;
+
+            // Verify outcome
+            outcome.Should().NotBeNull();
+            outcome.Errors.Should().NotBeNullOrEmpty()
+                .And.HaveCount(1)
+                .And.OnlyContain(e => e.GetType().Equals(typeof(BadFormatConversionError)));
+        }
+        #endregion
 
         [Fact]
         public void OptionClass_IsImmutable_HasNoCtor()
         {
             Action act = () => InvokeBuild<ValueWithNoSetterOptions>(new string[] { "Test" }, false, false);
 
-            act.Should().Throw<InvalidOperationException>();
+            act.Should().Throw<InvalidOperationException>()
+                .Which.Message.Should().Be("Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be immutable, but no constructor found to accept values.");
         }
 
+        [Fact]
+        public void OptionClass_IsImmutable_HasNoCtor_HelpRequested()
+        {
+            Action act = () => InvokeBuild<ValueWithNoSetterOptions>(new string[] { "--help" });
+
+            act.Should().Throw<InvalidOperationException>()
+                .Which.Message.Should().Be("Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be immutable, but no constructor found to accept values.");
+        }
+
+        [Fact]
+        public void Options_In_Group_With_No_Values_Generates_MissingGroupOptionError()
+        {
+            // Fixture setup
+            var optionNames = new List<NameInfo>
+            {
+                new NameInfo("", "option1"),
+                new NameInfo("", "option2")
+            };
+            var expectedResult = new[] { new MissingGroupOptionError("err-group", optionNames) };
+
+            // Exercize system 
+            var result = InvokeBuild<Options_With_Group>(
+                new[] { "-v 10.42" });
+
+            // Verify outcome
+            ((NotParsed<Options_With_Group>)result).Errors.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public void Options_In_Group_With_No_Values_Generates_MissingGroupOptionErrors()
+        {
+            // Fixture setup
+            var optionNames1 = new List<NameInfo>
+            {
+                new NameInfo("", "option11"),
+                new NameInfo("", "option12")
+            };
+            var optionNames2 = new List<NameInfo>
+            {
+                new NameInfo("", "option21"),
+                new NameInfo("", "option22")
+            };
+            var expectedResult = new[]
+            {
+                new MissingGroupOptionError("err-group", optionNames1),
+                new MissingGroupOptionError("err-group2", optionNames2)
+            };
+
+            // Exercize system 
+            var result = InvokeBuild<Options_With_Multiple_Groups>(
+                new[] { "-v 10.42" });
+
+            // Verify outcome
+            ((NotParsed<Options_With_Multiple_Groups>)result).Errors.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("-v", "10.5", "--option1", "test1", "--option2", "test2")]
+        [InlineData("-v", "10.5", "--option1", "test1")]
+        [InlineData("-v", "10.5", "--option2", "test2")]
+        public void Options_In_Group_With_Values_Does_Not_Generate_MissingGroupOptionError(params string[] args)
+        {
+            // Exercize system 
+            var result = InvokeBuild<Options_With_Group>(args);
+
+            // Verify outcome
+            result.Should().BeOfType<Parsed<Options_With_Group>>();
+        }
+
+        [Fact]
+        public void Options_In_Group_WithRequired_Does_Not_Generate_RequiredError()
+        {
+            // Fixture setup
+            var optionNames = new List<NameInfo>
+            {
+                new NameInfo("", "stingvalue"),
+                new NameInfo("s", "shortandlong")
+            };
+            var expectedResult = new[] { new MissingGroupOptionError("string-group", optionNames) };
+
+            // Exercize system 
+            var result = InvokeBuild<Simple_Options_With_Required_OptionGroup>(new string[] { "-x" });
+
+            // Verify outcome
+            result.Should().BeOfType<NotParsed<Simple_Options_With_Required_OptionGroup>>();
+            var errors = ((NotParsed<Simple_Options_With_Required_OptionGroup>)result).Errors;
+
+            errors.Should().HaveCount(1);
+            errors.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public void Options_In_Group_Ignore_Option_Group_If_Option_Group_Name_Empty()
+        {
+            var expectedResult = new[]
+            {
+                new MissingRequiredOptionError(new NameInfo("", "stringvalue")),
+                new MissingRequiredOptionError(new NameInfo("s", "shortandlong"))
+            };
+
+            // Exercize system 
+            var result = InvokeBuild<Simple_Options_With_OptionGroup_WithDefaultValue>(new string[] { "-x" });
+
+            // Verify outcome
+            result.Should().BeOfType<NotParsed<Simple_Options_With_OptionGroup_WithDefaultValue>>();
+            var errors = ((NotParsed<Simple_Options_With_OptionGroup_WithDefaultValue>)result).Errors;
+
+            errors.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public void Options_In_Group_Use_Option_Default_Value_When_Available()
+        {
+            // Exercize system 
+            var result = InvokeBuild<Simple_Options_With_OptionGroup_WithOptionDefaultValue>(new string[] { "-x" });
+
+            // Verify outcome
+            result.Should().BeOfType<Parsed<Simple_Options_With_OptionGroup_WithOptionDefaultValue>>();
+        }
+
+        [Fact]
+        public void Options_In_Group_Do_Not_Allow_Mutually_Exclusive_Set()
+        {
+            var expectedResult = new[]
+            {
+                new GroupOptionAmbiguityError(new NameInfo("", "stringvalue")),
+                new GroupOptionAmbiguityError(new NameInfo("s", "shortandlong"))
+            };
+
+            // Exercize system 
+            var result = InvokeBuild<Simple_Options_With_OptionGroup_MutuallyExclusiveSet>(new string[] { "-x" });
+
+            // Verify outcome
+            result.Should().BeOfType<NotParsed<Simple_Options_With_OptionGroup_MutuallyExclusiveSet>>();
+            var errors = ((NotParsed<Simple_Options_With_OptionGroup_MutuallyExclusiveSet>)result).Errors;
+
+            errors.Should().BeEquivalentTo(expectedResult);
+        }
+
+        #region custom types 
+       
+
+        [Theory]
+        [InlineData(new[] { "-c", "localhost:8080" }, "localhost", 8080)]
+        public void Parse_custom_struct_type(string[] arguments, string expectedServer, int expectedPort)
+        {
+            //Arrange
+
+            // Act
+            var result = InvokeBuild<CustomStructOptions>(arguments);
+
+            // Assert
+            var customValue = ((Parsed<CustomStructOptions>)result).Value.Custom;
+            customValue.Server.Should().Be(expectedServer);
+            customValue.Port.Should().Be(expectedPort);
+            customValue.Input.Should().Be(arguments[1]);
+        }
+
+        [Theory]
+        [InlineData(new[] { "-c", "localhost:8080" }, "localhost", 8080)]
+        public void Parse_custom_class_type(string[] arguments, string expectedServer, int expectedPort)
+        {
+            //Arrange
+
+            // Act
+            var result = InvokeBuild<CustomClassOptions>(arguments);
+
+            // Assert
+            var customValue = ((Parsed<CustomClassOptions>)result).Value.Custom;
+            customValue.Server.Should().Be(expectedServer);
+            customValue.Port.Should().Be(expectedPort);
+            customValue.Input.Should().Be(arguments[1]);
+        }
+
+        #endregion
         private class ValueWithNoSetterOptions
         {
             [Value(0, MetaName = "Test", Default = 0)]
@@ -1181,7 +1310,7 @@ namespace CommandLine.Tests.Unit.Core
         {
             get
             {
-                yield return new object[] { new[] { "to-value" }, new Options_With_Scalar_Value_And_Adjacent_SequenceString { StringValueWithIndexZero = "to-value", StringOptionSequence = new string[] {} } };
+                yield return new object[] { new[] { "to-value" }, new Options_With_Scalar_Value_And_Adjacent_SequenceString { StringValueWithIndexZero = "to-value", StringOptionSequence = new string[] { } } };
                 yield return new object[] { new[] { "to-value", "-s", "to-seq-0" }, new Options_With_Scalar_Value_And_Adjacent_SequenceString { StringValueWithIndexZero = "to-value", StringOptionSequence = new[] { "to-seq-0" } } };
                 yield return new object[] { new[] { "to-value", "-s", "to-seq-0", "to-seq-1" }, new Options_With_Scalar_Value_And_Adjacent_SequenceString { StringValueWithIndexZero = "to-value", StringOptionSequence = new[] { "to-seq-0", "to-seq-1" } } };
                 yield return new object[] { new[] { "-s", "cant-capture", "value-anymore" }, new Options_With_Scalar_Value_And_Adjacent_SequenceString { StringOptionSequence = new[] { "cant-capture", "value-anymore" } } };
@@ -1200,6 +1329,18 @@ namespace CommandLine.Tests.Unit.Core
                 yield return new object[] { new[] { "-x" }, new Immutable_Simple_Options(null, new int[] { }, true, default(long)) };
                 yield return new object[] { new[] { "9876543210" }, new Immutable_Simple_Options(null, new int[] { }, default(bool), 9876543210L) };
                 yield return new object[] { new[] { "--stringvalue=strval0", "-i", "9", "7", "8", "-x", "9876543210" }, new Immutable_Simple_Options("strval0", new[] { 9, 7, 8 }, true, 9876543210L) };
+            }
+        }
+        public static IEnumerable<object[]> ImmutableInstanceDataArgs
+        {
+            get
+            {
+                yield return   new object[] { new string[] { } } ;
+                yield return new object[] {new [] {"--stringvalue=strval0"}};
+                yield return new object[] { new[] { "-i", "9", "7", "8" } };
+                yield return new object[] { new[] { "-x" }};
+                yield return new object[] { new[] { "9876543210" }};
+                yield return new object[] { new[] { "--stringvalue=strval0", "-i", "9", "7", "8", "-x", "9876543210" }};
             }
         }
 

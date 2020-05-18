@@ -3,15 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit;
+using FluentAssertions;
+using CSharpx;
+using RailwaySharp.ErrorHandling;
 using CommandLine.Core;
 using CommandLine.Infrastructure;
-
-using Xunit;
-using CSharpx;
-
-using FluentAssertions;
-
-using RailwaySharp.ErrorHandling;
 
 namespace CommandLine.Tests.Unit.Core
 {
@@ -24,7 +21,7 @@ namespace CommandLine.Tests.Unit.Core
             var expectedTokens = new[] { Token.Name("i"), Token.Value("10"), Token.Name("string-seq"),
                 Token.Value("aaa"), Token.Value("bb"),  Token.Value("cccc"), Token.Name("switch") };
             var specs = new[] { new OptionSpecification(string.Empty, "string-seq",
-                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), ',', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence)};
+                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), ',', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty)};
 
             // Exercize system
             var result =
@@ -47,7 +44,7 @@ namespace CommandLine.Tests.Unit.Core
             var expectedTokens = new[] { Token.Name("x"), Token.Name("string-seq"),
                 Token.Value("aaa"), Token.Value("bb"),  Token.Value("cccc"), Token.Name("switch") };
             var specs = new[] { new OptionSpecification(string.Empty, "string-seq",
-                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), ',', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence)};
+                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), ',', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty)};
 
             // Exercize system
             var result =
@@ -77,14 +74,14 @@ namespace CommandLine.Tests.Unit.Core
             // Exercize system
             var result =
                 Tokenizer.Normalize(
-                    //Result.Succeed(
+                        //Result.Succeed(
                         Enumerable.Empty<Token>()
                             .Concat(
                                 new[] {
                                     Token.Name("x"), Token.Name("string-seq"), Token.Value("aaa"), Token.Value("bb"),
                                     Token.Name("unknown"), Token.Value("value0", true), Token.Name("switch") })
-                        //,Enumerable.Empty<Error>()),
-                    ,nameLookup);
+                    //,Enumerable.Empty<Error>()),
+                    , nameLookup);
 
             // Verify outcome
             result.Should().BeEquivalentTo(expectedTokens);
@@ -119,7 +116,7 @@ namespace CommandLine.Tests.Unit.Core
 
             var result = Tokenizer.Tokenize(args, name => NameLookupResult.OtherOptionFound, token => token);
 
-            var tokens = result.SuccessfulMessages();
+            var tokens = result.SuccessMessages();
 
             Assert.NotNull(tokens);
             Assert.Equal(2, tokens.Count());
@@ -127,5 +124,5 @@ namespace CommandLine.Tests.Unit.Core
             Assert.Equal(ErrorType.BadFormatTokenError, tokens.Last().Tag);
         }
     }
-   
+
 }

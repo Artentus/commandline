@@ -2,13 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using CommandLine.Tests.Fakes;
-using FluentAssertions;
 using Xunit;
+using FluentAssertions;
 using CommandLine.Text;
+using CommandLine.Tests.Fakes;
 
 namespace CommandLine.Tests.Unit
 {
@@ -371,7 +370,30 @@ namespace CommandLine.Tests.Unit
             lines[8].Should().BeEquivalentTo("version    Display version information.");
             // Teardown
         }
+       
+        [Fact]
+        public void Help_screen_in_default_verb_scenario()
+        {
+            // Fixture setup
+            var help = new StringWriter();
+            var sut = new Parser(config => config.HelpWriter = help);
 
+            // Exercise system
+            sut.ParseArguments<Add_Verb_As_Default, Commit_Verb, Clone_Verb>(new string[] {"--help" });
+            var result = help.ToString();
+         
+            // Verify outcome
+            result.Length.Should().BeGreaterThan(0);
+            var lines = result.ToNotEmptyLines().TrimStringArray();
+            lines[0].Should().Be(HeadingInfo.Default.ToString());
+            lines[1].Should().Be(CopyrightInfo.Default.ToString());
+            lines[2].Should().BeEquivalentTo("add        (Default Verb) Add file contents to the index.");
+            lines[3].Should().BeEquivalentTo("commit     Record changes to the repository.");
+            lines[4].Should().BeEquivalentTo("clone      Clone a repository into a new directory.");
+            lines[5].Should().BeEquivalentTo("help       Display more information on a specific command.");
+            lines[6].Should().BeEquivalentTo("version    Display version information.");
+            
+        }
         [Fact]
         public void Double_dash_help_dispalys_verbs_index_in_verbs_scenario()
         {
@@ -682,15 +704,16 @@ namespace CommandLine.Tests.Unit
             // Teardown
         }
 
-        //[Fact]
-        public static void Breaking_mutually_exclusive_set_constraint_with_set_name_with_partial_string_right_side_equality_gererates_MissingValueOptionError()
+        [Fact]
+        public static void Breaking_mutually_exclusive_set_constraint_with_both_set_name_with_gererates_Error()
         {
             // Fixture setup
             var expectedResult = new[]
-                {
-                    new MutuallyExclusiveSetError(new NameInfo("", "weburl"), string.Empty),
-                    new MutuallyExclusiveSetError(new NameInfo("", "somethingelese"), string.Empty)
-                };
+            {
+                new MutuallyExclusiveSetError(new NameInfo("", "weburl"), "theweb"),
+                new MutuallyExclusiveSetError(new NameInfo("", "somethingelse"), "theweb"),
+
+            };
             var sut = new Parser();
 
             // Exercize system 
@@ -699,8 +722,7 @@ namespace CommandLine.Tests.Unit
 
             // Verify outcome
             ((NotParsed<Options_With_SetName_That_Ends_With_Previous_SetName>)result).Errors.Should().BeEquivalentTo(expectedResult);
-
-            // Teardown
+           
         }
 
         [Fact]
@@ -825,5 +847,62 @@ namespace CommandLine.Tests.Unit
             // Teardown
         }
 
+
+        [Fact]
+        public void Parse_default_verb_implicit()
+        {
+            var parser = Parser.Default;
+            parser.ParseArguments<Default_Verb_One>(new[] { "-t" })
+                .WithNotParsed(errors => throw new InvalidOperationException("Must be parsed."))
+                .WithParsed(args =>
+                {
+                    Assert.True(args.TestValueOne);
+                });
+        }
+
+        [Fact]
+        public void Parse_default_verb_explicit()
+        {
+            var parser = Parser.Default;
+            parser.ParseArguments<Default_Verb_One>(new[] { "default1", "-t" })
+                .WithNotParsed(errors => throw new InvalidOperationException("Must be parsed."))
+                .WithParsed(args =>
+                {
+                    Assert.True(args.TestValueOne);
+                });
+        }
+
+        [Fact]
+        public void Parse_multiple_default_verbs()
+        {
+            var parser = Parser.Default;
+            parser.ParseArguments<Default_Verb_One, Default_Verb_Two>(new string[] { })
+                .WithNotParsed(errors => Assert.IsType<MultipleDefaultVerbsError>(errors.First()))
+                .WithParsed(args => throw new InvalidOperationException("Should not be parsed."));
+        }
+
+        [Fact]
+        public void Parse_default_verb_with_empty_name()
+        {
+            var parser = Parser.Default;
+            parser.ParseArguments<Default_Verb_With_Empty_Name>(new[] { "-t" })
+                .WithNotParsed(errors => throw new InvalidOperationException("Must be parsed."))
+                .WithParsed(args =>
+                {
+                    Assert.True(args.TestValue);
+                });
+        }
+        //Fix Issue #409 for WPF
+        [Fact]
+        public void When_HelpWriter_is_null_it_should_not_fire_exception()
+        {
+            // Arrange
+            
+            //Act
+            var sut = new Parser(config => config.HelpWriter = null);
+            sut.ParseArguments<Simple_Options>(new[] {"--dummy"});
+            //Assert
+            sut.Settings.MaximumDisplayWidth.Should().BeGreaterThan(1);
+        }
     }
 }

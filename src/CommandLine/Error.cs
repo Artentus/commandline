@@ -1,6 +1,8 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CommandLine
 {
@@ -69,7 +71,19 @@ namespace CommandLine
         /// <summary>
         /// Value of <see cref="CommandLine.InvalidAttributeConfigurationError"/> type.
         /// </summary>
-        InvalidAttributeConfigurationError
+        InvalidAttributeConfigurationError,
+        /// <summary>
+        /// Value of <see cref="CommandLine.MissingGroupOptionError"/> type.
+        /// </summary>
+        MissingGroupOptionError,
+        /// <summary>
+        /// Value of <see cref="CommandLine.GroupOptionAmbiguityError"/> type.
+        /// </summary>
+        GroupOptionAmbiguityError, 
+        /// <summary>
+        /// Value of <see cref="CommandLine.MultipleDefaultVerbsError"/> type.
+        /// </summary>
+        MultipleDefaultVerbsError
 
     }
 
@@ -210,7 +224,7 @@ namespace CommandLine
         /// <remarks>A hash code for the current <see cref="System.Object"/>.</remarks>
         public override int GetHashCode()
         {
-            return new {Tag, StopsProcessing, Token}.GetHashCode();
+            return new { Tag, StopsProcessing, Token }.GetHashCode();
         }
 
         /// <summary>
@@ -289,7 +303,7 @@ namespace CommandLine
         /// <remarks>A hash code for the current <see cref="System.Object"/>.</remarks>
         public override int GetHashCode()
         {
-            return new {Tag, StopsProcessing, NameInfo}.GetHashCode();
+            return new { Tag, StopsProcessing, NameInfo }.GetHashCode();
         }
 
         /// <summary>
@@ -525,5 +539,74 @@ namespace CommandLine
             : base(ErrorType.InvalidAttributeConfigurationError, true)
         {
         }
+    }
+
+    public sealed class MissingGroupOptionError : Error, IEquatable<Error>, IEquatable<MissingGroupOptionError>
+    {
+        public const string ErrorMessage = "At least one option in a group must have value.";
+
+        private readonly string group;
+        private readonly IEnumerable<NameInfo> names;
+
+        internal MissingGroupOptionError(string group, IEnumerable<NameInfo> names)
+            : base(ErrorType.MissingGroupOptionError)
+        {
+            this.group = group;
+            this.names = names;
+        }
+
+        public string Group
+        {
+            get { return group; }
+        }
+
+        public IEnumerable<NameInfo> Names
+        {
+            get { return names; }
+        }
+
+        public new bool Equals(Error obj)
+        {
+            var other = obj as MissingGroupOptionError;
+            if (other != null)
+            {
+                return Equals(other);
+            }
+
+            return base.Equals(obj);
+        }
+
+        public bool Equals(MissingGroupOptionError other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Group.Equals(other.Group) && Names.SequenceEqual(other.Names);
+        }
+    }
+
+    public sealed class GroupOptionAmbiguityError : NamedError
+    {
+        public NameInfo Option;
+
+        internal GroupOptionAmbiguityError(NameInfo option)
+            : base(ErrorType.GroupOptionAmbiguityError, option)
+        {
+            Option = option;
+        }
+    }
+
+    /// <summary>
+    /// Models an error generated when multiple default verbs are defined.
+    /// </summary>
+    public sealed class MultipleDefaultVerbsError : Error
+    {
+        public const string ErrorMessage = "More than one default verb is not allowed.";
+
+        internal MultipleDefaultVerbsError()
+            : base(ErrorType.MultipleDefaultVerbsError)
+        { }
     }
 }

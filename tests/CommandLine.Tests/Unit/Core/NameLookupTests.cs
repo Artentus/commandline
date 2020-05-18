@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using CommandLine.Core;
-using FluentAssertions;
 using Xunit;
+using FluentAssertions;
+using CommandLine.Core;
 using CSharpx;
 
 namespace CommandLine.Tests.Unit.Core
@@ -17,7 +17,7 @@ namespace CommandLine.Tests.Unit.Core
             // Fixture setup
             var expected = Maybe.Just(".");
             var specs = new[] { new OptionSpecification(string.Empty, "string-seq",
-                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence)};
+                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty)};
 
             // Exercize system
             var result = NameLookup.HavingSeparator("string-seq", specs, StringComparer.Ordinal);
@@ -35,7 +35,7 @@ namespace CommandLine.Tests.Unit.Core
 
             // Fixture setup
             var expected = new NameInfo(ShortName, LongName);
-            var spec = new OptionSpecification(ShortName, LongName, false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence);
+            var spec = new OptionSpecification(ShortName, LongName, false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty);
 
             // Exercize system
             var result = spec.FromOptionSpecification();

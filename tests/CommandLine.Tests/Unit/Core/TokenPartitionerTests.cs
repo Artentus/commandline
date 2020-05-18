@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommandLine.Core;
-using CSharpx;
 using Xunit;
+using CSharpx;
+using CommandLine.Core;
 
 namespace CommandLine.Tests.Unit.Core
 {
@@ -17,12 +17,12 @@ namespace CommandLine.Tests.Unit.Core
             // Fixture setup
             var expectedSequence = new[]
                 {
-                    new KeyValuePair<string, IEnumerable<string>>("i", new[] {"10", "20", "30", "40"}) 
+                    new KeyValuePair<string, IEnumerable<string>>("i", new[] {"10", "20", "30", "40"})
                 };
-            var specs =new[]
+            var specs = new[]
                 {
-                    new OptionSpecification(string.Empty, "stringvalue", false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(string), TargetType.Scalar),
-                    new OptionSpecification("i", string.Empty, false, string.Empty, Maybe.Just(3), Maybe.Just(4), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<int>), TargetType.Sequence)
+                    new OptionSpecification(string.Empty, "stringvalue", false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(string), TargetType.Scalar, string.Empty),
+                    new OptionSpecification("i", string.Empty, false, string.Empty, Maybe.Just(3), Maybe.Just(4), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<int>), TargetType.Sequence, string.Empty)
                 };
 
             // Exercize system 
@@ -44,12 +44,12 @@ namespace CommandLine.Tests.Unit.Core
             // Fixture setup
             var expectedSequence = new[]
                 {
-                    new KeyValuePair<string, IEnumerable<string>>("i", new[] {"10", "10", "30", "40"}) 
+                    new KeyValuePair<string, IEnumerable<string>>("i", new[] {"10", "10", "30", "40"})
                 };
-            var specs =new[]
+            var specs = new[]
                 {
-                    new OptionSpecification(string.Empty, "stringvalue", false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(string), TargetType.Scalar),
-                    new OptionSpecification("i", string.Empty, false, string.Empty, Maybe.Just(3), Maybe.Just(4), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<int>), TargetType.Sequence)
+                    new OptionSpecification(string.Empty, "stringvalue", false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(string), TargetType.Scalar, string.Empty),
+                    new OptionSpecification("i", string.Empty, false, string.Empty, Maybe.Just(3), Maybe.Just(4), '\0', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<int>), TargetType.Sequence, string.Empty)
                 };
 
             // Exercize system 
